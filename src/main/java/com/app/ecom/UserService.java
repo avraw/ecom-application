@@ -2,6 +2,7 @@ package com.app.ecom;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -21,13 +22,18 @@ public class UserService {
         // Business logic for retrieving all users can be added here
         return userList;
     }
-    public User getUserById(Long id) {
-        for (User user : userList) {
-            if (user.getId().equals(id)) {
-                return user;
-            }
-        }
-        return null;   
+    public Optional<User> getUserById(Long id) {
+        return userList.stream().filter(user -> user.getId().equals(id)).findFirst();
+       
        }
-    
+
+
+       public Optional<User> updateUserById(Long id, User updatedUser) {
+        return Optional.of(userList.stream().filter(user -> user.getId().equals(id)).findFirst().map(existingUser -> {
+            existingUser.setFirstName(updatedUser.getFirstName());
+            existingUser.setLastName(updatedUser.getLastName());
+            return existingUser;
+        }).orElse(null));
+       
+       }
 }
