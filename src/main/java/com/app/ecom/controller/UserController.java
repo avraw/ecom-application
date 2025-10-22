@@ -1,4 +1,4 @@
-package com.app.ecom;
+package com.app.ecom.controller;
 
 
 import java.net.URI;
@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.ecom.dto.UserRequest;
+import com.app.ecom.dto.UserResponse;
+import com.app.ecom.service.UserService;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -24,13 +28,13 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
        
 
         return userService.getUserById(id).map(ResponseEntity::ok)
@@ -38,18 +42,18 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
        
 
-        return userService.updateUserById(id,user).map(ResponseEntity::ok)
+        return userService.updateUserById(id,userRequest).map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
 
     @PostMapping
-    public ResponseEntity<List<User>> createUser(@RequestBody User user) {
-        List<User> createdUsers = userService.addUser(user);
-        User ourUser = createdUsers.get(createdUsers.size() - 1);
+    public ResponseEntity<List<UserResponse>> createUser(@RequestBody UserRequest userRequest) {
+        List<UserResponse> createdUsers = userService.addUser(userRequest);
+        UserResponse ourUser = createdUsers.get(createdUsers.size() - 1);
         return ResponseEntity.created(URI.create("/api/users/" + ourUser.getId())).body(createdUsers);
     }
     
