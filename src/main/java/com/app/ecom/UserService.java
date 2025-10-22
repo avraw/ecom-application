@@ -6,33 +6,37 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Service
 public class UserService {
-    private long userIdCounter = 1L;
-    private List<User> userList = new ArrayList<>();
+
+    private final UserRepository userRepository;
+  
 
 
     public List<User> addUser( User user) {
-        user.setId(userIdCounter++);
-        userList.add(user);
-        return userList;
+        
+        userRepository.save(user);
+        return userRepository.findAll();
     }
     public List<User> getAllUsers() {
-        // Business logic for retrieving all users can be added here
-        return userList;
+     
+        return userRepository.findAll();
     }
     public Optional<User> getUserById(Long id) {
-        return userList.stream().filter(user -> user.getId().equals(id)).findFirst();
+        return userRepository.findById(id);
        
        }
 
 
        public Optional<User> updateUserById(Long id, User updatedUser) {
-        return Optional.of(userList.stream().filter(user -> user.getId().equals(id)).findFirst().map(existingUser -> {
+        return (userRepository.findById(id).map(existingUser -> {
             existingUser.setFirstName(updatedUser.getFirstName());
             existingUser.setLastName(updatedUser.getLastName());
-            return existingUser;
+            userRepository.save(existingUser);
+            return userRepository.findById(id);
         }).orElse(null));
        
        }

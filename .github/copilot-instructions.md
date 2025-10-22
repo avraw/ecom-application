@@ -71,81 +71,126 @@ When fixing code that involves a new concept:
 
 ## Core Task
 When asked about any Spring Boot concept or code:
-1. Create a new markdown file in `docs/concepts/`
-2. Name format: `concept-name.md` (NO numbers, use descriptive kebab-case names)
-3. **CHEATSHEET FORMAT** - Quick reference, not tutorial
-4. **MAXIMUM 100 LINES PER FILE** - Phone-readable, portable cheatsheets
-5. Each file must be self-contained and focused on one concept
-6. Explain how to implement rather than implementing directly
-7. Keep it crisp, precise, and noob-friendly
+1. Create or UPDATE a single markdown file in `docs/concepts/`
+2. **ONE FILE PER REQUEST** - All related concepts in a single comprehensive document
+3. Name format: `concept-name.md` (descriptive kebab-case, e.g., `java-functional-programming.md`)
+4. **TUTORIAL FORMAT** - Complete learning guide, not just quick reference
+5. **NO LINE LIMIT** - Explain everything thoroughly
+6. **PROPER LEARNING ORDER** - Build concepts from basics to advanced
+7. **EXPLAIN EVERY DETAIL** - Assume ZERO prior Java knowledge
+8. If concepts are related, put them in ONE file with proper ordering
+9. Explain how to implement rather than implementing directly
+10. Keep it clear, detailed, and extremely noob-friendly
 
 ## Documentation Guidelines
 
-### Writing Style - CHEATSHEET, CRISP, SCANNABLE:
-- **CHEATSHEET format** - quick reference cards, not tutorials
+### Writing Style - DETAILED TUTORIAL:
+- **TUTORIAL format** - complete learning guide with proper progression
 - Use simple, everyday language
-- Short sentences and paragraphs
-- Avoid academic or verbose explanations
-- Get to the point quickly
-- Use practical, real-world examples
-- Heavy use of code examples with minimal prose
-- Scannable structure - easy to find information quickly
-- Assume the reader is learning this for the first time
+- Explain EVERY piece - assume zero prior knowledge
+- Build concepts from fundamentals to advanced
+- Explain what built-in methods do (like `.forEach()`, `.map()`)
+- Explain what interfaces are and what methods they define
+- Show where things come from (Java built-in vs custom code)
+- Use extensive code examples with detailed explanations
+- Never assume the reader knows anything
+- If you use a term, explain it immediately
 
 **Good Example:**
 ```markdown
 ## What is @RestController?
 
-It's a shortcut annotation that combines two things:
-1. @Controller - marks this as a web controller
-2. @ResponseBody - returns data directly (not a view/HTML page)
+### What Problem Does It Solve?
+In web applications, you need to tell Spring which classes handle web requests.
 
-Without it, you'd write:
-@Controller
-@ResponseBody
-public class UserController { }
+### The Old Way (More Code)
+Without @RestController, you need TWO annotations:
 
-With it:
-@RestController
-public class UserController { }
+```java
+@Controller              // Tells Spring: "This handles web requests"
+@ResponseBody           // Tells Spring: "Return data, not HTML pages"
+public class UserController {
+    @GetMapping("/users")
+    public List<User> getUsers() {
+        return userList;  // Spring converts this to JSON
+    }
+}
+```
+
+### The New Way (Less Code)
+@RestController combines both annotations:
+
+```java
+@RestController         // Does BOTH @Controller AND @ResponseBody
+public class UserController {
+    @GetMapping("/users")
+    public List<User> getUsers() {
+        return userList;  // Spring converts this to JSON
+    }
+}
+```
+
+### What's Happening Behind the Scenes
+1. Spring scans your code at startup
+2. Finds classes with @RestController
+3. Registers them as web request handlers
+4. Automatically converts return values to JSON
 ```
 
 **Bad Example:**
 ```markdown
 ## What is @RestController?
 
-The @RestController annotation is a specialized version of the controller 
-stereotype annotation that encapsulates the functionality of both @Controller 
-and @ResponseBody annotations, thereby eliminating the need to annotate every 
-request handling method with @ResponseBody. This composite annotation was 
-introduced to simplify the development of RESTful web services...
+It combines @Controller and @ResponseBody.
 ```
 
-### File Format - CHEATSHEET STYLE:
-1. **STRICT File Length Limit:**
-   - **MAXIMUM 100 lines per file - NO EXCEPTIONS**
-   - Files should be CHEATSHEETS, not tutorials
-   - Quick reference format - scannable, not wall of text
-   - Count lines before creating - if over 100, split immediately
-   - Better to have 3 small cheatsheets than 1 large file
-   - If a concept needs more than 100 lines, it's multiple concepts
+### File Format - COMPREHENSIVE TUTORIAL:
+1. **NO Line Limit:**
+   - Explain everything thoroughly
+   - As long as needed to teach the concept properly
+   - Don't split concepts artificially
+   - Keep related information together
 
-2. Concept Separation:
-   - One primary concept per file
-   - Create separate files for sub-concepts
-   - Use clear file naming to show relationships
-   Example:
-   ```
-   dependency-injection.md          (main concept)
-   constructor-injection.md         (sub-concept)
-   field-injection.md              (sub-concept)
-   setter-injection.md             (sub-concept)
+2. **Proper Learning Order:**
+   - Start with fundamentals
+   - Build up to complex concepts
+   - Each section should build on previous sections
+   - Don't reference concepts before explaining them
+
+3. **Explain Every Detail:**
+   - Built-in Java methods (`.forEach()`, `.map()`, `.get()`)
+   - What interfaces define (like `Consumer` has `accept()` method)
+   - What comes from Java vs what you write
+   - Where variables come from
+   - What each line of code does
+   - Why something is needed
+
+4. **Structure Example:**
+   ```markdown
+   # Lambda Expressions
+   
+   ## What You Need to Know First
+   (Explain prerequisites like interfaces, methods, etc.)
+   
+   ## The Basics
+   (Start simple)
+   
+   ## Building Up
+   (Add complexity gradually)
+   
+   ## Real Examples
+   (Show practical usage)
+   
+   ## Common Issues
+   (Things that trip people up)
    ```
 
-3. Content Focus:
-   - Stay focused on the specific concept
-   - Move related but separate concepts to new files
-   - Link to related concepts rather than repeating information
+5. **Single Comprehensive File:**
+   - Keep ALL related concepts in ONE file
+   - Example: Lambdas, method references (::), Optional, .map(), .orElse() all go in one file
+   - Don't split into multiple files - create one complete learning document
+   - Better to have one thorough guide than scattered pieces
+   - Build concepts in order within the single file
 
 ## Teaching Approach
 - Guide through implementation steps
@@ -195,57 +240,103 @@ public class Example {
 4. List common issues/gotchas with code examples
 
 ## File Structure Template
-**MAXIMUM 100 LINES - STRICTLY ENFORCED**
+**COMPREHENSIVE TUTORIAL - NO LINE LIMIT**
 
-Every cheatsheet should follow this compact structure:
+Every tutorial should follow this thorough structure:
 
 ```markdown
-# Concept Name (1 line title)
+# Concept Name
 
-## Quick Summary (2-3 lines max)
-What it is and why you need it.
+## What You Need to Know First
+Explain any prerequisites:
+- What is an interface? (if relevant)
+- What is a method? (if relevant)
+- What Java basics are needed?
 
-## TIBCO BW Equivalent (3-5 lines)
-- TIBCO component/pattern that does similar thing
-- Key difference in approach
+## The Problem This Solves
+Why does this concept exist?
+What problem did developers face before this?
 
-## Code Comparison
+## TIBCO BW Equivalent
+- How you'd do this in TIBCO BW
+- Key differences in approach
+- Mental model for TIBCO developers
 
-### Without Framework (5-10 lines)
+## The Basics - Step by Step
+
+### Without This Concept (The Old Way)
+Show the manual/verbose way with FULL explanation:
 ```java
-// Manual way - short example
-public class Example {
-    // Minimal code showing the problem
-}
+// Explain EVERY line
+// What is List? (Java built-in collection)
+// What does .forEach() do? (built-in method that loops)
+// What is Consumer? (Java interface with accept() method)
+List<User> users = getUsers();  // This returns a list of User objects
+users.forEach(                   // forEach is a method on List, loops through items
+    new Consumer<User>() {       // Consumer is a Java interface (from java.util.function)
+        @Override                // We're implementing Consumer's one required method
+        public void accept(User user) {  // accept() is the method Consumer defines
+            System.out.println(user.getName());  // Print the user's name
+        }
+    }
+);
 ```
 
-### With Framework (5-10 lines)
+Explain:
+- Where each piece comes from (Java built-in vs custom)
+- What each method does
+- Why it's so verbose
+
+### With This Concept (The New Way)
+Show the improved way with FULL explanation:
 ```java
-// Spring way - short example
-@Annotation
-public class Example {
-    // Minimal code showing the solution
-}
+// Same result, less code
+List<User> users = getUsers();
+users.forEach(user -> System.out.println(user.getName()));
 ```
 
-## Key Points (bullet points, 5-10 lines)
-- What happens behind the scenes
-- When to use this
-- Common gotcha with 1-line fix
+Explain:
+- How this works
+- What changed
+- Why it's better
 
-## Quick Reference (optional, 5-10 lines)
-| Annotation | Purpose |
-|------------|---------|
-| @Example   | Does X  |
+### What's Happening Behind the Scenes
+Detailed explanation of the mechanism
+
+## Building Up - More Examples
+
+Start simple, add complexity:
+
+### Example 1: Simple Case
+(with full explanation)
+
+### Example 2: More Complex
+(with full explanation)
+
+### Example 3: Real-World Usage
+(with full explanation)
+
+## How This Works in Your Code
+Show actual examples from their project
+
+## Common Mistakes and Gotchas
+Show what goes wrong and how to fix it
+
+## Quick Reference
+Table or list of key points for quick lookup
+
+## Related Concepts
+Link to other docs if needed
 ```
 
 **Structure Rules:**
-- Total file: MAX 100 lines (including blank lines)
-- Code examples: Keep under 10 lines each
-- Explanations: Use bullet points, not paragraphs
-- Tables for quick lookup when helpful
-- Link to related concepts instead of explaining them
-- If you hit 100 lines, split into multiple files
+- NO line limit - be thorough
+- Explain EVERY detail
+- Build concepts in proper order
+- Don't skip steps
+- Show where things come from
+- Explain built-in methods
+- Assume zero prior knowledge
 
 ## Important
 - Create a new file for each new concept
