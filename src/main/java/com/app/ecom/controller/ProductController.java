@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.ecom.dto.ProductRequest;
@@ -51,6 +52,19 @@ public class ProductController {
         return productService.updateProduct(id, productRequest)
                 .map(updatedProduct -> ResponseEntity.ok(updatedProduct))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+        return productService.getProductById(id)
+                .map(product -> ResponseEntity.ok(product))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+                
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponse>> searchProducts(@RequestParam String keyword) {
+        return ResponseEntity.ok(productService.searchProducts(keyword));
     }
 
 }
