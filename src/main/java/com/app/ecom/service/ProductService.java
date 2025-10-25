@@ -1,6 +1,7 @@
 package com.app.ecom.service;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -58,6 +59,21 @@ public class ProductService {
             return mapToProductResponse(updatedProduct);
         
         });
+    }
+
+    public List<ProductResponse> getAllProducts() {
+       return productRepository.findByIsActiveTrue().stream()
+               .map(this::mapToProductResponse)
+               .toList();
+
+    }
+
+    public boolean deleteProduct(Long id) {
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
 
