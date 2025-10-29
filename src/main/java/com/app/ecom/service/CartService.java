@@ -15,15 +15,23 @@ public class CartService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    public void addToCart(String userId, CartItemRequest cartItemRequest) {
+    public boolean addToCart(String userId, CartItemRequest cartItemRequest) {
         // Convert CartItemRequest to CartItem entity
-        CartItem cartItem = new CartItem();
-        cartItem.setUserId(userId);
-        cartItem.setProductId(cartItemRequest.getProductId());
-        cartItem.setQuantity(cartItemRequest.getQuantity());
+        Optional<Product> productOpt = productRepository.findById(cartItemRequest.getProductId());
+        if (!productOpt.isPresent()) {
+            return false; // Product not found
+        }
+        Product product = productOpt.get();
 
-        // Save CartItem to the repository
-        cartRepository.save(cartItem);
-    }
+        if (product.getStock() < cartItemRequest.getQuantity()) {
+            return false; // Not enough stock
+        }
+
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (!userOpt.isPresent()) {
+            return false; // User not found
+        }
+
+        User user = userOpt.get();
     
 }
